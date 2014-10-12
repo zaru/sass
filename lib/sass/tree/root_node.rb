@@ -32,11 +32,11 @@ module Sass
       private
 
       def css_tree
-        Visitors::CheckNesting.visit(self)
-        result = Visitors::Perform.visit(self)
-        Visitors::CheckNesting.visit(result) # Check again to validate mixins
-        result, extends = Visitors::Cssize.visit(result)
-        Visitors::Extend.visit(result, extends)
+        track("Check Nesting") {Visitors::CheckNesting.visit(self)}
+        result = track("Perform") {Visitors::Perform.visit(self)}
+        track("Check Nesting") {Visitors::CheckNesting.visit(result)} # Check again to validate mixins
+        result, extends = track("Cssize") {Visitors::Cssize.visit(result)}
+        track("Extend") {Visitors::Extend.visit(result, extends)}
         result
       end
     end

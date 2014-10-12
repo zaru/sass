@@ -3,6 +3,25 @@ $LOAD_PATH.unshift dir unless $LOAD_PATH.include?(dir)
 
 require 'sass/version'
 
+$stopwatches = {}
+
+def track(name)
+  start = Time.now
+  yield
+ensure
+  stop = Time.now
+  $stopwatches[name] ||= 0
+  $stopwatches[name] += stop - start
+end
+
+at_exit do
+  name_len = $stopwatches.keys.map(&:length).max
+  $stopwatches.each do |name, time|
+    time *= 1000
+    puts "%#{name_len}s: %02d:%02d:%03d" % [name, time / (60 * 1000), (time % (60 * 1000)) / 1000, time % 1000]
+  end
+end
+
 # The module that contains everything Sass-related:
 #
 # * {Sass::Engine} is the class used to render Sass/SCSS within Ruby code.

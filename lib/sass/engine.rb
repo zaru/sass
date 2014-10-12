@@ -265,8 +265,10 @@ module Sass
     #   cannot be converted to UTF-8
     # @raise [ArgumentError] if the document uses an unknown encoding with `@charset`
     def render
-      return _to_tree.render unless @options[:quiet]
-      Sass::Util.silence_sass_warnings {_to_tree.render}
+      track("Render") do
+        return _to_tree.render unless @options[:quiet]
+        Sass::Util.silence_sass_warnings {_to_tree.render}
+      end
     end
 
     # Render the template to CSS and return the source map.
@@ -282,8 +284,10 @@ module Sass
     #   cannot be converted to UTF-8
     # @raise [ArgumentError] if the document uses an unknown encoding with `@charset`
     def render_with_sourcemap(sourcemap_uri)
-      return _render_with_sourcemap(sourcemap_uri) unless @options[:quiet]
-      Sass::Util.silence_sass_warnings {_render_with_sourcemap(sourcemap_uri)}
+      track("Render") do
+        return _render_with_sourcemap(sourcemap_uri) unless @options[:quiet]
+        Sass::Util.silence_sass_warnings {_render_with_sourcemap(sourcemap_uri)}
+      end
     end
 
     alias_method :to_css, :render
