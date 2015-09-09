@@ -207,7 +207,9 @@ END
           puts_action :create, :green, output
         end
 
-        process_file(f, output)
+        open_file(f) do |input|
+          process_file(input, output)
+        end
       end
     end
 
